@@ -15,38 +15,71 @@ Complete guide to deploy SkillSync to production.
 
 ## 🗄️ Part 1: Deploy Backend (Railway - Recommended)
 
-### Option A: Deploy to Railway
+### Option A: Deploy to Railway (UPDATED - Fixed for Monorepo)
 
 1. **Create Railway Account**
    - Go to [railway.app](https://railway.app)
    - Sign up with GitHub
 
-2. **Create New Project**
+2. **Push Configuration Files** (IMPORTANT - Do this FIRST)
+   
+   The project now includes `railway.toml` and `nixpacks.toml` in the root directory. Make sure these are committed and pushed to GitHub:
+   
+   ```bash
+   git add railway.toml nixpacks.toml
+   git commit -m "Add Railway configuration"
+   git push origin main
+   ```
+
+3. **Create New Project**
    - Click "New Project"
    - Select "Deploy from GitHub repo"
    - Connect your SkillSync repository
-   - Select the `backend` folder
+   - Railway will now automatically detect the backend folder using the config files
 
-3. **Add PostgreSQL Database**
-   - Click "New" → "Database" → "Add PostgreSQL"
-   - Railway will auto-configure DATABASE_URL
+4. **Add PostgreSQL Database**
+   - In your Railway project, click "+ New"
+   - Select "Database" → "Add PostgreSQL"
+   - Railway will automatically create a DATABASE_URL environment variable
 
-4. **Set Environment Variables**
+5. **Set Environment Variables**
+   
+   Click on your service → Variables tab → Add these:
    ```
    SPRING_PROFILES_ACTIVE=prod
-   JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long
-   OPENAI_API_KEY=your-openai-api-key (optional)
+   JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long-please-change-this
+   OPENAI_API_KEY=your-openai-api-key (optional - for AI features)
+   ```
+   
+   **Generate a secure JWT secret:**
+   ```bash
+   # On Linux/Mac:
+   openssl rand -base64 32
+   
+   # Or use any random 32+ character string
    ```
 
-5. **Configure Build**
-   - Root Directory: `backend`
-   - Build Command: `mvn clean package -DskipTests`
-   - Start Command: `java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/*.jar`
+6. **Verify Configuration**
+   
+   The configuration files handle:
+   - ✅ Root directory pointing to `backend`
+   - ✅ Build command: `mvn clean package -DskipTests`
+   - ✅ Start command with proper port binding
+   - ✅ Health check endpoint: `/api/health`
+   
+   No manual configuration needed!
 
-6. **Deploy**
-   - Click "Deploy"
-   - Wait 5-10 minutes
-   - Copy your backend URL (e.g., `https://skillsync-backend.up.railway.app`)
+7. **Deploy**
+   - Railway will automatically deploy
+   - Wait 5-10 minutes for the first deployment
+   - Click on your service to see the deployment URL
+   - Copy your backend URL (e.g., `https://skillsync-backend-production.up.railway.app`)
+
+8. **Verify Deployment**
+   
+   Visit these URLs to confirm:
+   - `https://your-backend-url.railway.app/api/health` - Should return `{"status":"UP"}`
+   - `https://your-backend-url.railway.app/api` - Should return welcome message
 
 ### Option B: Deploy to Render
 
