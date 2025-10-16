@@ -3,6 +3,9 @@ builder = "nixpacks"
 buildCommand = "cd backend && mvn clean package -DskipTests"
 
 [deploy]
-startCommand = "cd backend && java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/*.jar"
+startCommand = "cd backend && java -Dserver.port=$PORT -jar target/*.jar"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
+
+[deploy.environmentVariables]
+SPRING_PROFILES_ACTIVE = "prod"
