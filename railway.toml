@@ -3,8 +3,6 @@ builder = "nixpacks"
 buildCommand = "cd backend && mvn clean package -DskipTests"
 
 [deploy]
-startCommand = "cd backend && java -jar target/*.jar"
-healthcheckPath = "/api/health"
-healthcheckTimeout = 300
+startCommand = "cd backend && java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/*.jar"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
