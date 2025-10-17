@@ -3,10 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import { FiMail, FiLock, FiUser, FiCheck, FiInbox } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+import { FiMail, FiLock, FiUser, FiCheck } from "react-icons/fi";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +13,6 @@ const Register = () => {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
-  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -51,11 +47,10 @@ const Register = () => {
     const result = await register(userData);
 
     if (result.success) {
-      // Show verification message instead of navigating
-      setRegisteredEmail(formData.email);
-      toast.success("Account created successfully! Please verify your email.", {
+      toast.success("Account created successfully! 🎉", {
         position: "top-right",
       });
+      navigate("/profile");
     } else {
       toast.error(result.error || "Registration failed", {
         position: "top-right",
@@ -63,12 +58,6 @@ const Register = () => {
     }
 
     setLoading(false);
-  };
-
-  const handleGoogleSignUp = () => {
-    // Redirect to backend OAuth2 endpoint
-    const backendUrl = API_URL.replace("/api", "");
-    window.location.href = `${backendUrl}/oauth2/authorization/google`;
   };
 
   const benefits = [
@@ -79,87 +68,6 @@ const Register = () => {
     "Access to 500+ courses",
     "Resume analysis tools",
   ];
-
-  // If registration successful, show verification message
-  if (registeredEmail) {
-    return (
-      <div className="min-h-screen flex items-center justify-center py-12 px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-md w-full card-gradient text-center"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl"
-          >
-            <FiInbox className="text-4xl text-white" />
-          </motion.div>
-
-          <h2 className="text-3xl font-bold gradient-text mb-4">
-            Check Your Email! 📧
-          </h2>
-
-          <p className="text-gray-600 mb-6">
-            We've sent a verification link to:
-          </p>
-
-          <p className="text-lg font-semibold text-primary-600 mb-6 bg-primary-50 py-3 px-4 rounded-lg">
-            {registeredEmail}
-          </p>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
-            <h3 className="font-semibold text-blue-900 mb-2 flex items-center">
-              <FiCheck className="mr-2" />
-              Next Steps:
-            </h3>
-            <ol className="text-sm text-blue-800 space-y-2 ml-6 list-decimal">
-              <li>Open your email inbox</li>
-              <li>Find the verification email from SkillSync</li>
-              <li>Click the verification link</li>
-              <li>Start exploring your personalized learning journey!</li>
-            </ol>
-          </div>
-
-          <p className="text-sm text-gray-500 mb-6">
-            Didn't receive the email? Check your spam folder or{" "}
-            <Link
-              to="/verify-email"
-              className="text-primary-600 font-semibold hover:underline"
-            >
-              resend verification email
-            </Link>
-          </p>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() => navigate("/login")}
-              className="flex-1 btn-primary py-3"
-            >
-              Go to Login
-            </button>
-            <button
-              onClick={() => {
-                setRegisteredEmail("");
-                setFormData({
-                  username: "",
-                  email: "",
-                  password: "",
-                  confirmPassword: "",
-                });
-              }}
-              className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-            >
-              Register Another
-            </button>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4">
@@ -329,30 +237,6 @@ const Register = () => {
                 ) : (
                   "Create Account"
                 )}
-              </motion.button>
-
-              {/* Divider */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
-                    Or sign up with
-                  </span>
-                </div>
-              </div>
-
-              {/* Google Sign-Up Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="button"
-                onClick={handleGoogleSignUp}
-                className="w-full flex items-center justify-center gap-3 px-4 py-4 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-semibold text-lg"
-              >
-                <FcGoogle className="text-2xl" />
-                Sign up with Google
               </motion.button>
 
               <div className="text-center">

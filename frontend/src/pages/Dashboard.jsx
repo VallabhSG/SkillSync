@@ -4,28 +4,19 @@ import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { profileAPI, careerAPI } from "../services/api";
 import ProgressTracker from "../components/ProgressTracker";
-import axios from "axios";
-import { toast } from "react-toastify";
 import {
   FiUser,
   FiTarget,
   FiBook,
   FiTrendingUp,
   FiAward,
-  FiAlertCircle,
-  FiMail,
-  FiX,
 } from "react-icons/fi";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showVerificationBanner, setShowVerificationBanner] = useState(true);
-  const [resendingEmail, setResendingEmail] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -50,30 +41,6 @@ const Dashboard = () => {
       console.error("Error loading dashboard:", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleResendVerification = async () => {
-    setResendingEmail(true);
-    try {
-      const response = await axios.post(`${API_URL}/verification/resend`, {
-        email: user.email,
-      });
-
-      if (response.data.success) {
-        toast.success("Verification email sent! Please check your inbox.", {
-          position: "top-right",
-        });
-      }
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to resend verification email.",
-        {
-          position: "top-right",
-        },
-      );
-    } finally {
-      setResendingEmail(false);
     }
   };
 
@@ -105,67 +72,6 @@ const Dashboard = () => {
             Let's continue your learning journey
           </p>
         </motion.div>
-
-        {/* Email Verification Banner - DISABLED */}
-        {false && !user.emailVerified && showVerificationBanner && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="mb-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 rounded-lg p-4 shadow-md"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start space-x-3 flex-1">
-                <FiAlertCircle className="text-yellow-600 text-2xl flex-shrink-0 mt-1" />
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">
-                    Verify Your Email Address
-                  </h3>
-                  <p className="text-sm text-gray-700 mb-3">
-                    Please verify your email address (
-                    <strong>{user.email}</strong>) to access all features and
-                    receive important updates.
-                  </p>
-                  <div className="flex gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleResendVerification}
-                      disabled={resendingEmail}
-                      className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-semibold"
-                    >
-                      {resendingEmail ? (
-                        <>
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                          />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <FiMail />
-                          Resend Verification Email
-                        </>
-                      )}
-                    </motion.button>
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowVerificationBanner(false)}
-                className="text-gray-500 hover:text-gray-700 transition-colors ml-2"
-              >
-                <FiX className="text-xl" />
-              </button>
-            </div>
-          </motion.div>
-        )}
 
         {!profile ? (
           <motion.div
