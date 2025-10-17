@@ -45,4 +45,14 @@ public class User {
     private LocalDateTime updatedAt;
 
     private boolean enabled = true;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
+    @Column(name = "auth_provider")
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(name = "provider_id")
+    private String providerId;
 }

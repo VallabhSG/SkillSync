@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import { FiMail, FiLock, FiUser, FiCheck } from "react-icons/fi";
+import { FiMail, FiLock, FiUser, FiCheck, FiInbox } from "react-icons/fi";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,7 @@ const Register = () => {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -47,10 +48,11 @@ const Register = () => {
     const result = await register(userData);
 
     if (result.success) {
-      toast.success("Account created successfully! 🎉", {
+      // Show verification message instead of navigating
+      setRegisteredEmail(formData.email);
+      toast.success("Account created successfully! Please verify your email.", {
         position: "top-right",
       });
-      navigate("/profile");
     } else {
       toast.error(result.error || "Registration failed", {
         position: "top-right",
@@ -68,6 +70,87 @@ const Register = () => {
     "Access to 500+ courses",
     "Resume analysis tools",
   ];
+
+  // If registration successful, show verification message
+  if (registeredEmail) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-12 px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md w-full card-gradient text-center"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl"
+          >
+            <FiInbox className="text-4xl text-white" />
+          </motion.div>
+
+          <h2 className="text-3xl font-bold gradient-text mb-4">
+            Check Your Email! 📧
+          </h2>
+
+          <p className="text-gray-600 mb-6">
+            We've sent a verification link to:
+          </p>
+
+          <p className="text-lg font-semibold text-primary-600 mb-6 bg-primary-50 py-3 px-4 rounded-lg">
+            {registeredEmail}
+          </p>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+            <h3 className="font-semibold text-blue-900 mb-2 flex items-center">
+              <FiCheck className="mr-2" />
+              Next Steps:
+            </h3>
+            <ol className="text-sm text-blue-800 space-y-2 ml-6 list-decimal">
+              <li>Open your email inbox</li>
+              <li>Find the verification email from SkillSync</li>
+              <li>Click the verification link</li>
+              <li>Start exploring your personalized learning journey!</li>
+            </ol>
+          </div>
+
+          <p className="text-sm text-gray-500 mb-6">
+            Didn't receive the email? Check your spam folder or{" "}
+            <Link
+              to="/verify-email"
+              className="text-primary-600 font-semibold hover:underline"
+            >
+              resend verification email
+            </Link>
+          </p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/login")}
+              className="flex-1 btn-primary py-3"
+            >
+              Go to Login
+            </button>
+            <button
+              onClick={() => {
+                setRegisteredEmail("");
+                setFormData({
+                  username: "",
+                  email: "",
+                  password: "",
+                  confirmPassword: "",
+                });
+              }}
+              className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+            >
+              Register Another
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4">

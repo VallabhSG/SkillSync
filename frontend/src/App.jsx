@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Recommendations from "./pages/Recommendations";
 import Courses from "./pages/Courses";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
             <Route
               path="/dashboard"
