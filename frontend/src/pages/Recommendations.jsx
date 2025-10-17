@@ -10,6 +10,7 @@ import {
   FiCode,
   FiBriefcase,
   FiZap,
+  FiExternalLink,
 } from "react-icons/fi";
 import SkillGapChart from "../components/SkillGapChart";
 import LearningPathTimeline from "../components/LearningPathTimeline";
@@ -271,16 +272,25 @@ const Recommendations = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ x: 10 }}
-                    className="flex items-start space-x-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200"
+                    whileHover={{ x: 10, scale: 1.02 }}
+                    onClick={() => {
+                      // Extract course name and provider for better search
+                      const searchQuery = encodeURIComponent(course);
+                      const searchUrl = `https://www.google.com/search?q=${searchQuery}`;
+                      window.open(searchUrl, "_blank", "noopener,noreferrer");
+                    }}
+                    className="flex items-start space-x-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200 cursor-pointer hover:shadow-lg transition-all duration-200 group"
                   >
                     <div className="text-3xl">📚</div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">{course}</p>
+                      <p className="font-medium text-gray-900 group-hover:text-primary-600 transition-colors">
+                        {course}
+                      </p>
                       <p className="text-sm text-gray-600 mt-1">
-                        Click to explore this course
+                        Click to search and enroll in this course
                       </p>
                     </div>
+                    <FiExternalLink className="text-primary-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </motion.div>
                 ))}
               </div>
