@@ -6,6 +6,16 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.3-38bdf8)
 ![Framer Motion](https://img.shields.io/badge/Framer%20Motion-10.16-ff69b4)
 
+## 🌐 Live Demo
+
+**🔗 Live Application**: https://skill-sync-delta-amber.vercel.app/
+
+**🔗 Backend API**: https://skillsync-backend-production-cf99.up.railway.app/api
+
+**🔗 GitHub Repository**: https://github.com/VallabhSG/SkillSync
+
+---
+
 ## ✨ Overview
 
 **SkillSync** is a cutting-edge, full-stack web application that revolutionizes career planning through AI-powered recommendations. Built with modern technologies and featuring stunning animations, SkillSync helps students and professionals discover their ideal career paths, identify skill gaps, and access curated learning resources.
@@ -488,15 +498,29 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-## 📧 Support
+## 📧 Support & Contact
 
 For issues and questions:
-- Create an issue in the repository
-- Email: support@skillsync.com
-- Documentation: [docs.skillsync.com](https://docs.skillsync.com)
+- **GitHub Issues**: https://github.com/VallabhSG/SkillSync/issues
+- **Live Demo**: https://skill-sync-delta-amber.vercel.app/
+- **Repository**: https://github.com/VallabhSG/SkillSync
 
 ---
 
-**Built with ❤️ by the SkillSync Team**
+## 🎯 Project Links
 
-🌟 If you like this project, please give it a star! 🌟
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Live App** | https://skill-sync-delta-amber.vercel.app/ | Production frontend (Vercel) |
+| **Backend API** | https://skillsync-backend-production-cf99.up.railway.app/api | Production backend (Railway) |
+| **GitHub** | https://github.com/VallabhSG/SkillSync | Source code repository |
+| **Frontend Deployment** | Vercel | Automatic deployments from main branch |
+| **Backend Deployment** | Railway | Automatic deployments with PostgreSQL |
+
+---
+
+**Built with ❤️ by Vallabh SG**
+
+🌟 **If you like this project, please give it a star!** 🌟
+
+[![GitHub stars](https://img.shields.io/github/stars/VallabhSG/SkillSync?style=social)](https://github.com/VallabhSG/SkillSync)
