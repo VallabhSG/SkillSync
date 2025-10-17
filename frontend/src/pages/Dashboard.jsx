@@ -106,8 +106,8 @@ const Dashboard = () => {
           </p>
         </motion.div>
 
-        {/* Email Verification Banner */}
-        {!user.emailVerified && showVerificationBanner && (
+        {/* Email Verification Banner - DISABLED */}
+        {false && !user.emailVerified && showVerificationBanner && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

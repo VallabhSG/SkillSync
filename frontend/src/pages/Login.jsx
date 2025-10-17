@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { FiMail, FiLock, FiUser } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -40,6 +43,12 @@ const Login = () => {
     }
 
     setLoading(false);
+  };
+
+  const handleGoogleLogin = () => {
+    // Redirect to backend OAuth2 endpoint
+    const backendUrl = API_URL.replace("/api", "");
+    window.location.href = `${backendUrl}/oauth2/authorization/google`;
   };
 
   return (
@@ -170,6 +179,30 @@ const Login = () => {
                 ) : (
                   "Sign In"
                 )}
+              </motion.button>
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              {/* Google Sign-In Button */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                onClick={handleGoogleLogin}
+                className="w-full flex items-center justify-center gap-3 px-4 py-4 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-semibold text-lg"
+              >
+                <FcGoogle className="text-2xl" />
+                Sign in with Google
               </motion.button>
 
               <div className="text-center">

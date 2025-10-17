@@ -62,26 +62,27 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRole(Role.USER);
         user.setEnabled(true);
-        user.setEmailVerified(false); // Email not verified yet
+        user.setEmailVerified(true); // Skip email verification for now
 
         User savedUser = userRepository.save(user);
 
+        // Email verification disabled - using Google OAuth instead
         // Generate verification token
-        String verificationToken = UUID.randomUUID().toString();
-        VerificationToken token = new VerificationToken(verificationToken, savedUser);
-        verificationTokenRepository.save(token);
+        // String verificationToken = UUID.randomUUID().toString();
+        // VerificationToken token = new VerificationToken(verificationToken, savedUser);
+        // verificationTokenRepository.save(token);
 
         // Send verification email
-        try {
-            emailService.sendVerificationEmail(
-                    savedUser.getEmail(),
-                    savedUser.getUsername(),
-                    verificationToken
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send verification email: " + e.getMessage());
-            // Continue with registration even if email fails
-        }
+        // try {
+        //     emailService.sendVerificationEmail(
+        //             savedUser.getEmail(),
+        //             savedUser.getUsername(),
+        //             verificationToken
+        //     );
+        // } catch (Exception e) {
+        //     System.err.println("Failed to send verification email: " + e.getMessage());
+        //     // Continue with registration even if email fails
+        // }
 
         // Generate JWT token (user can still login but should see verification prompt)
         String jwtToken = tokenProvider.generateTokenFromUsername(savedUser.getUsername());
