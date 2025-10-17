@@ -1,70 +1,67 @@
 package com.skillsync.controller;
 
-import com.skillsync.dto.CourseDto;
-import com.skillsync.dto.SkillDto;
-import com.skillsync.model.Skill;
-import com.skillsync.repository.SkillRepository;
-import com.skillsync.service.CourseService;
+import com.skillsync.repository.UserRepository;
+import com.skillsync.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "*", maxAge = 3600)
-@PreAuthorize("hasRole('ADMIN')")
+@CrossOrigin(origins = "*")
 public class AdminController {
 
     @Autowired
-    private CourseService courseService;
+    private UserRepository userRepository;
 
     @Autowired
-    private SkillRepository skillRepository;
+    private VerificationTokenRepository verificationTokenRepository;
 
-    @PostMapping("/courses")
-    public ResponseEntity<CourseDto> createCourse(@RequestBody CourseDto courseDto) {
-        CourseDto created = courseService.createCourse(courseDto);
-        return ResponseEntity.ok(created);
+    /**
+     * TEMPORARY ENDPOINT - Delete user by email
+     * DELETE THIS AFTER TESTING!
+     */
+    @DeleteMapping("/delete-user/{email}")
+    public ResponseEntity<?> deleteUserByEmail(@PathVariable String email) {
+        try {
+            userRepository.findByEmail(email).ifPresent(user -> {
+                // Tokens are auto-deleted due to CASCADE
+                userRepository.delete(user);
+            });
+
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "User deleted successfully"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of(
+                "success", false,
+                "message", "Error: " + e.getMessage()
+            ));
+        }
     }
 
-    @PostMapping("/skills")
-    public ResponseEntity<SkillDto> createSkill(@RequestBody SkillDto skillDto) {
-        Skill skill = new Skill();
-        skill.setName(skillDto.getName());
-        skill.setDescription(skillDto.getDescription());
-        skill.setCategory(skillDto.getCategory());
-        skill.setDifficultyLevel(skillDto.getDifficultyLevel());
+    /**
+     * TEMPORARY ENDPOINT - Clear all users
+     * DELETE THIS AFTER TESTING!
+     */
+    @DeleteMapping("/clear-all-users")
+    public ResponseEntity<?> clearAllUsers() {
+        try {
+            verificationTokenRepository.deleteAll();
+            userRepository.deleteAll();
 
-        Skill saved = skillRepository.save(skill);
-
-        SkillDto response = new SkillDto();
-        response.setId(saved.getId());
-        response.setName(saved.getName());
-        response.setDescription(saved.getDescription());
-        response.setCategory(saved.getCategory());
-        response.setDifficultyLevel(saved.getDifficultyLevel());
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/skills")
-    public ResponseEntity<List<SkillDto>> getAllSkills() {
-        List<SkillDto> skills = skillRepository.findAll().stream()
-                .map(skill -> {
-                    SkillDto dto = new SkillDto();
-                    dto.setId(skill.getId());
-                    dto.setName(skill.getName());
-                    dto.setDescription(skill.getDescription());
-                    dto.setCategory(skill.getCategory());
-                    dto.setDifficultyLevel(skill.getDifficultyLevel());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(skills);
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "All users cleared successfully"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of(
+                "success", false,
+                "message", "Error: " + e.getMessage()
+            ));
+        }
     }
 }
