@@ -160,13 +160,41 @@ On GitHub:
    - Click "Deploy" or it auto-deploys
    - Wait 5-10 minutes for build
 
-9. **Get Your Backend URL**
+9. **Get Your Backend URL** ✅ **COMPLETED**
    - Go to "Settings" → "Networking"
    - Click "Generate Domain"
    - Copy the URL (e.g., `https://skillsync-backend-production.up.railway.app`)
    - **SAVE THIS URL - YOU'LL NEED IT!**
 
-✅ **Verify**: Visit `https://your-backend-url/api` - you should see a response
+10. **Connect Database to Backend**
+    - Railway automatically connects PostgreSQL
+    - In "Variables" tab, verify these auto-generated:
+      - `DATABASE_URL`
+      - `PGHOST`
+      - `PGPORT`
+      - `PGUSER`
+      - `PGPASSWORD`
+      - `PGDATABASE`
+    
+11. **Add Database Connection Variables**
+    - Still in "Variables" tab, manually add:
+      ```
+      SPRING_DATASOURCE_URL=jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+      SPRING_DATASOURCE_USERNAME=${PGUSER}
+      SPRING_DATASOURCE_PASSWORD=${PGPASSWORD}
+      ```
+    - Railway will automatically replace ${} values
+    
+12. **Trigger Redeploy**
+    - Go to "Deployments" tab
+    - Click "Redeploy" on latest deployment
+    - OR push any change to GitHub (triggers auto-deploy)
+    - Wait 5-10 minutes for build and deployment
+
+✅ **Verify**: 
+- Check "Deployments" tab - should show "Success" with green checkmark
+- Visit `https://your-backend-url/api/health` or `/actuator/health` - should return healthy status
+- Check logs - NO MORE "Connection refused" errors!
 
 ---
 
